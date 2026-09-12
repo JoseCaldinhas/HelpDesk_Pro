@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpDesk Pro</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- MENU LATERAL -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">H</div>
+                <span>HelpDesk <strong>Pro</strong></span>
+            </div>
+
+            <nav>
+                <button class="nav-item active" onclick="mostrarPagina('dashboard', this)">
+                    📊 Dashboard
+                </button>
+
+                <button class="nav-item" onclick="mostrarPagina('chamados', this)">
+                    🎫 Chamados
+                </button>
+
+                <button class="nav-item" onclick="mostrarPagina('novo-chamado', this)">
+                    ➕ Novo chamado
+                </button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="user-sidebar">
+                    <div class="avatar">JC</div>
+                    <div>
+                        <strong>José Caldas</strong>
+                        <small>Administrador</small>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main">
+
+            <!-- HEADER -->
+            <header class="topbar">
+
+                <div>
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-subtitle">Visão geral dos chamados de suporte.</p>
+                </div>
+
+                <button class="new-ticket-btn" onclick="abrirNovoChamado()">
+                    + Novo chamado
+                </button>
+
+            </header>
+
+
+            <!-- DASHBOARD -->
+            <section id="dashboard" class="page active-page">
+
+                <div class="cards">
+
+                    <div class="card">
+                        <div>
+                            <span>Total de chamados</span>
+                            <strong id="totalChamados">0</strong>
+                        </div>
+                        <div class="card-icon blue">🎫</div>
+                    </div>
+
+                    <div class="card">
+                        <div>
+                            <span>Chamados abertos</span>
+                            <strong id="chamadosAbertos">0</strong>
+                        </div>
+                        <div class="card-icon orange">⏳</div>
+                    </div>
+
+                    <div class="card">
+                        <div>
+                            <span>Em andamento</span>
+                            <strong id="chamadosAndamento">0</strong>
+                        </div>
+                        <div class="card-icon purple">⚙️</div>
+                    </div>
+
+                    <div class="card">
+                        <div>
+                            <span>Resolvidos</span>
+                            <strong id="chamadosResolvidos">0</strong>
+                        </div>
+                        <div class="card-icon green">✓</div>
+                    </div>
+
+                </div>
+
+
+                <div class="content-box">
+
+                    <div class="box-header">
+                        <div>
+                            <h2>Chamados recentes</h2>
+                            <p>Últimos chamados registrados.</p>
+                        </div>
+
+                        <button class="link-btn" onclick="mostrarPagina('chamados')">
+                            Ver todos
+                        </button>
+                    </div>
+
+                    <div id="recent-tickets" class="tickets-list"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CHAMADOS -->
+            <section id="chamados" class="page">
+
+                <div class="content-box">
+
+                    <div class="box-header">
+                        <div>
+                            <h2>Todos os chamados</h2>
+                            <p>Gerencie os chamados do sistema.</p>
+                        </div>
+                    </div>
+
+                    <div class="filters">
+
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="🔎 Pesquisar chamado..."
+                            oninput="renderizarChamados()"
+                        >
+
+                        <select id="statusFilter" onchange="renderizarChamados()">
+                            <option value="Todos">Todos os status</option>
+                            <option value="Aberto">Aberto</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Resolvido">Resolvido</option>
+                        </select>
+
+                    </div>
+
+                    <div id="all-tickets" class="tickets-list"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- NOVO CHAMADO -->
+            <section id="novo-chamado" class="page">
+
+                <div class="content-box form-box">
+
+                    <div class="box-header">
+                        <div>
+                            <h2 id="form-title">Criar novo chamado</h2>
+                            <p>Preencha as informações abaixo.</p>
+                        </div>
+                    </div>
+
+                    <form id="ticketForm">
+
+                        <input type="hidden" id="editId">
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label>Título do chamado</label>
+                                <input
+                                    type="text"
+                                    id="titulo"
+                                    placeholder="Ex: Computador não liga"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Categoria</label>
+
+                                <select id="categoria" required>
+                                    <option value="">Selecione</option>
+                                    <option value="Hardware">Hardware</option>
+                                    <option value="Software">Software</option>
+                                    <option value="Rede">Rede</option>
+                                    <option value="Acesso">Acesso</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>Descrição</label>
+
+                            <textarea
+                                id="descricao"
+                                rows="6"
+                                placeholder="Descreva o problema..."
+                                required
+                            ></textarea>
+                        </div>
+
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label>Prioridade</label>
+
+                                <select id="prioridade">
+                                    <option value="Baixa">Baixa</option>
+                                    <option value="Média" selected>Média</option>
+                                    <option value="Alta">Alta</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Solicitante</label>
+
+                                <input
+                                    type="text"
+                                    id="solicitante"
+                                    value="José Caldas"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                type="button"
+                                class="cancel-btn"
+                                onclick="mostrarPagina('dashboard')"
+                            >
+                                Cancelar
+                            </button>
+
+                            <button type="submit" class="submit-btn">
+                                Salvar chamado
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- MODAL -->
+    <div id="modal" class="modal">
+
+        <div class="modal-content">
+
+            <button class="close-modal" onclick="fecharModal()">×</button>
+
+            <h2>Detalhes do chamado</h2>
+
+            <div id="modalContent"></div>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
